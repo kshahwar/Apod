@@ -37,16 +37,12 @@ exports.find = async (req, res) => {
       if (!result) {
         res.status(400).send("not found");
       }
-      // NOT_FOUND
       download(result.url, `${date}.png`, function () {
         console.log("done");
       });
 
       const imagedata = `${dbConfig.LOCALIMAGE}${date}`;
       result.url = imagedata;
-
-      // Save Apod in the database
-
       const storedData = await apod.saveApod(result);
 
       if (storedData) {
