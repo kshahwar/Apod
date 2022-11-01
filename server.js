@@ -1,23 +1,24 @@
+const dbConfig = require("./app/config/db.config.js");
 const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
-
+require("dotenv").config();
+const path = require("path");
 const app = express();
 
 var corsOptions = {
-  origin: "http://localhost:8081"
+  origin: "http://127.0.0.1:5500"
+  // origin: "http://localhost:3000/"
 };
 
 app.use(cors(corsOptions));
 
-// parse requests of content-type - application/json
+// app.use("/public", express.static(path.join(__dirname, "/public")));
+app.use(express.static('app/public'));
+// app.use('/static', express.static(path.join(__dirname, "/public")));
+
 app.use(bodyParser.json());
-
-// parse requests of content-type - application/x-www-form-urlencoded
-app.use(bodyParser.urlencoded({ extended: true }));
-
 const db = require("./app/models");
-
 db.sequelize.sync();
 // // drop the table if it already exists
 // db.sequelize.sync({ force: true }).then(() => {
@@ -26,13 +27,12 @@ db.sequelize.sync();
 
 // simple route
 app.get("/", (req, res) => {
-  res.json({ message: "Welcome to bezkoder application." });
+  res.json(" welcom to apod");
 });
 
-require("./app/routes/turorial.routes")(app);
+require("./app/routes/apod.routes")(app);
 
-// set port, listen for requests
-const PORT = process.env.PORT || 8080;
+const PORT = dbConfig.PORT || 8080;
 app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}.`);
+  console.log(`server is running ${PORT}.`);
 });
